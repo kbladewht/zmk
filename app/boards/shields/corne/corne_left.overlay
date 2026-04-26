@@ -16,3 +16,11 @@
         , <&pro_micro 14 GPIO_ACTIVE_HIGH>
         ;
 };
+/ {
+    lfclk: lfclk {
+        compatible = "fixed-clock";
+        clock-frequency = <32768>;
+        #clock-cells = <0>;
+        status = "okay";
+    };
+};

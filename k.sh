@@ -52,11 +52,9 @@ cd app
 
 # west build -b nice_nano -- -DSHIELD=cornix_dongle_adapter 
 # west build -b nice_nano -- -DSHIELD=cornix_dongle_adapter 
-west build -b nice_nano -- -DSHIELD=cornix_dongle_adapter 
-end_time=$(date +%s)s
+# west build -b nice_nano -- -DSHIELD=cornix_dongle_adapter 
+west build -b nice_nano -- -DSHIELD=corne_left 
 
-execution_time=$(($end_time-$start_time))
-echo "Compilation time: $execution_time seconds"
 
 polling_check
 cp build/zephyr/zmk.uf2 E:/flash.uf2

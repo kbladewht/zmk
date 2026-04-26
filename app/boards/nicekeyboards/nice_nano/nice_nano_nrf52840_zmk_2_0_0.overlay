@@ -20,7 +20,7 @@
         compatible = "zmk,battery-nrf-vddh";
     };
 };
-
+ddd
 &reg0 {
     status = "okay";
 };
