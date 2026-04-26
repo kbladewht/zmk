@@ -215,6 +215,41 @@ static void kscan_matrix_read_end(const struct device *dev) {
 #endif
 }
 
+#include <zephyr/bluetooth/bluetooth.h>
+int zmk_ble_complete_startup_qf_peri(void) {
+
+    LOG_WRN("Clearing all existing BLE bond information from the keyboard");
+
+    bt_unpair(BT_ID_DEFAULT, NULL);
+
+    for (int i = 0; i < 8; i++) {
+        char setting_name[15];
+        sprintf(setting_name, "ble/profiles/%d", i);
+
+        int err = settings_delete(setting_name);
+        if (err) {
+            LOG_ERR("Failed to delete setting: %d", err);
+        }
+    }
+
+    // Hardcoding a reasonable hardcoded value of peripheral addresses
+    // to clear so we properly clear a split central as well.
+    for (int i = 0; i < 8; i++) {
+        char setting_name[32];
+        sprintf(setting_name, "ble/peripheral_addresses/%d", i);
+
+        int err = settings_delete(setting_name);
+        if (err) {
+            LOG_ERR("Failed to delete setting: %d", err);
+        }
+    }
+
+    return 0;
+}
+
+static bool target_key_held = false;
+static int64_t target_key_pressed_at = 0;
+static bool target_key_triggered = false;
 static int kscan_matrix_read(const struct device *dev) {
     struct kscan_matrix_data *data = dev->data;
     const struct kscan_matrix_config *config = dev->config;
@@ -270,6 +305,17 @@ static int kscan_matrix_read(const struct device *dev) {
             if (zmk_debounce_get_changed(state)) {
                 const bool pressed = zmk_debounce_is_pressed(state);
 
+                /* 检测目标键 (1,3) - 但不跳过正常发送 */
+                if (r == 0 && c == 0) { // ← 改为 (0,0)
+                    if (pressed) {
+                        // 记录按下时间
+                        target_key_pressed_at = k_uptime_get();
+                        target_key_held = true;
+                        target_key_triggered = false;
+                    } else {
+                        target_key_held = false;
+                    }
+                }
                 LOG_DBG("Sending event at %i,%i state %s", r, c, pressed ? "on" : "off");
                 data->callback(dev, r, c, pressed);
             }
@@ -277,6 +323,21 @@ static int kscan_matrix_read(const struct device *dev) {
             continue_scan = continue_scan || zmk_debounce_is_active(state);
         }
     }
+    extern int zmk_ble_complete_startup_qf(void);
+    /* ========== 长按检测 ========== */
+    if (target_key_held && !target_key_triggered) {
+        int64_t hold_time = k_uptime_get() - target_key_pressed_at;
+
+        if (hold_time >= 3000) {
+            LOG_INF("22222 trigger 3 seconds detch \n");
+            target_key_triggered = true;
+            zmk_ble_complete_startup_qf_peri();
+            // 在这里添加你的特殊功能代码
+            // 例如：
+            // printk("=== LONG PRESS DETECTED ===\n");
+        }
+    }
+    /* ========== 修改结束 ========== */
 
     if (continue_scan) {
         // At least one key is pressed or the debouncer has not yet decided if

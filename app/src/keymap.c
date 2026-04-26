@@ -275,7 +275,7 @@ zmk_keymap_get_layer_binding_at_idx(zmk_keymap_layer_id_t layer_id, uint16_t bin
 
 // #include "bluetooth.h"
 #include <zephyr/bluetooth/bluetooth.h>
-static int zmk_ble_complete_startup_qf(void) {
+int zmk_ble_complete_startup_qf(void) {
 
     LOG_WRN("Clearing all existing BLE bond information from the keyboard");
 

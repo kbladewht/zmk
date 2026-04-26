@@ -2,3 +2,5 @@ if SHIELD_CORNIX_DONGLE_ADAPTER
 endif # END ALL
 
 #vim: set ft=kconfig:
+config ZMK_KEYBOARD_NAME
+    default "ADAPTER_CORNIX"
