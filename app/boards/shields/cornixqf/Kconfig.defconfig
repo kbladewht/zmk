@@ -2,7 +2,7 @@
 if SHIELD_CORNIXQF_DONGLE
 
 config ZMK_KEYBOARD_NAME
-    default "DONGLE_CORNIX"
+    default "CORNIX_D2"
 
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
