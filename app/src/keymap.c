@@ -36,9 +36,11 @@ static zmk_keymap_layer_id_t _zmk_keymap_layer_default = 0;
 #endif
 
 #define TRANSFORMED_LAYER(node)                                                                    \
-    {COND_CODE_1(DT_NODE_HAS_PROP(node, bindings),                                                 \
-                 (LISTIFY(DT_PROP_LEN(node, bindings), ZMK_KEYMAP_EXTRACT_BINDING, (, ), node)),   \
-                 ())}
+    {                                                                                              \
+        COND_CODE_1(                                                                               \
+            DT_NODE_HAS_PROP(node, bindings),                                                      \
+            (LISTIFY(DT_PROP_LEN(node, bindings), ZMK_KEYMAP_EXTRACT_BINDING, (, ), node)), ())    \
+    }
 
 #if ZMK_KEYMAP_HAS_SENSORS
 #define _TRANSFORM_SENSOR_ENTRY(idx, layer)                                                        \
@@ -271,6 +273,81 @@ zmk_keymap_get_layer_binding_at_idx(zmk_keymap_layer_id_t layer_id, uint16_t bin
     return &zmk_keymap[layer_id][mapped_idx];
 }
 
+// #include "bluetooth.h"
+#include <zephyr/bluetooth/bluetooth.h>
+int zmk_ble_complete_startup_qf(void) {
+
+    LOG_WRN("Clearing all existing BLE bond information from the keyboard");
+
+    bt_unpair(BT_ID_DEFAULT, NULL);
+
+    for (int i = 0; i < 8; i++) {
+        char setting_name[15];
+        sprintf(setting_name, "ble/profiles/%d", i);
+
+        int err = settings_delete(setting_name);
+        if (err) {
+            LOG_ERR("Failed to delete setting: %d", err);
+        }
+    }
+
+    // Hardcoding a reasonable hardcoded value of peripheral addresses
+    // to clear so we properly clear a split central as well.
+    for (int i = 0; i < 8; i++) {
+        char setting_name[32];
+        sprintf(setting_name, "ble/peripheral_addresses/%d", i);
+
+        int err = settings_delete(setting_name);
+        if (err) {
+            LOG_ERR("Failed to delete setting: %d", err);
+        }
+    }
+
+    return 0;
+}
+static void handle_bootloader_entry(uint16_t binding_idx,
+                                    const struct zmk_behavior_binding *binding) {
+
+    if (binding->behavior_dev == NULL) {
+        return;
+    }
+
+    // ★★★★★ Check for bootloader binding ★★★★★
+    if (strcmp(binding->behavior_dev, "bootload") == 0) {
+        LOG_INF("  position=%d, behavior='%s' \n", binding_idx, binding->behavior_dev);
+
+        extern int bootmode_set(uint8_t boot_mode);
+        int ret = bootmode_set(1); // BOOT_MODE_TYPE_BOOTLOADER
+        if (ret < 0) {
+            LOG_ERR("Failed to set the bootloader mode (%d)", ret);
+            return;
+        }
+        extern FUNC_NORETURN void sys_reboot(int type);
+        sys_reboot(0); // SYS_REBOOT_WARM 0
+    }
+
+    // ★★★★★ Check for reset binding ★★★★★
+    if (strcmp(binding->behavior_dev, "bluetooth") == 0 && binding->param1 == 0x00000004) {
+        LOG_INF(" reset kb behavior='%s' \n", binding->behavior_dev);
+
+        // 1. 先断开所有连接（模拟 BT_DISC_CMD 对所有 profile）
+        for (int i = 0; i < 2; i++) {
+            if (zmk_ble_profile_is_connected(i)) {
+                LOG_INF("Disconnecting profile %d", i);
+                zmk_ble_prof_disconnect(i);
+            }
+        }
+
+        zmk_ble_complete_startup_qf();
+        extern void zmk_ble_clear_all_bonds(void);
+        // zmk_ble_clear_all_bonds();
+        zmk_ble_clear_all_bonds();
+        // 2. 延迟 500ms 确保清除完成
+        LOG_INF("Delaying 500ms for BLE clear to complete...");
+    }
+    // ★★★★★★★★★★★★★★★★★★★★
+}
+
 #if IS_ENABLED(CONFIG_ZMK_KEYMAP_SETTINGS_STORAGE)
 
 #define PENDING_ARRAY_SIZE DIV_ROUND_UP(ZMK_KEYMAP_LEN, 8)
@@ -309,6 +386,8 @@ int zmk_keymap_set_layer_binding_at_idx(zmk_keymap_layer_id_t layer_id, uint16_t
                 storage_binding_idx);
         return 0;
     }
+
+    handle_bootloader_entry(binding_idx, &binding);
 
     uint8_t *pending = zmk_keymap_layer_pending_changes[layer_id];
 
@@ -913,12 +992,11 @@ static int keymap_handle_set(const char *name, size_t len, settings_read_cb read
                     binding_setting.behavior_local_id);
         }
 
-        zmk_keymap[layer][key_position] = (struct zmk_behavior_binding){
+        zmk_keymap[layer][key_position] = (struct zmk_behavior_binding) {
 #if IS_ENABLED(CONFIG_ZMK_BEHAVIOR_LOCAL_IDS_IN_BINDINGS)
             .local_id = binding_setting.behavior_local_id,
 #endif
-            .behavior_dev = name,
-            .param1 = binding_setting.param1,
+            .behavior_dev = name, .param1 = binding_setting.param1,
             .param2 = binding_setting.param2,
         };
     }

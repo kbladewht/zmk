@@ -5,7 +5,7 @@ export HISTFILE=~/.bash_history_mx_kbd
 # Make clean
 export ORIG_CWD=$(pwd)
 . ./common.sh
-
+export ZEPHYR_SDK_INSTALL_DIR="D:/zephyr-sdk-0.16.9"
 DRIVE_P=F
 
 # Accept first argument as shield identifier or custom tag (e.g., L, R, D)
@@ -20,7 +20,7 @@ cd app || exit 1
  rm -rf build
 
 echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"
-# export ZEPHYR_SDK_INSTALL_DIR="D:/zephyr-sdk-0.16.9"
+
 # Determine build target and output filename suffix based on argument
 if [ "$ARG_TAG" == "L" ]; then
     SHIELD_TARGET="corne_left"
@@ -31,8 +31,12 @@ if [ "$ARG_TAG" == "L" ]; then
   -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
 elif [ "$ARG_TAG" == "D" ]; then
     # NOTE: Replace 'corne_dongle' with the actual shield name for your dongle if different
-    SHIELD_TARGET="corne_dongled" 
+    SHIELD_TARGET="cornix_dongle_adapter" 
     FILE_SUFFIX="_dongle"
+    west build -b nice_nano \
+  -S studio-rpc-usb-uart \
+  -S zmk-usb-logging \
+  -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
 else
     # Default to Right if no argument or argument is not L or D
     SHIELD_TARGET="corne_right"
