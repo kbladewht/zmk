@@ -6,10 +6,7 @@ export HISTFILE=~/.bash_history_mx_kbd
 export ORIG_CWD=$(pwd)
 . ./common.sh
 export ZEPHYR_SDK_INSTALL_DIR="D:/zephyr-sdk-0.16.9"
-DRIVE_P=F
-
-# Accept first argument as shield identifier or custom tag (e.g., L, R, D)
-ARG_TAG=$1
+DRIVE_P=E
 
 
 curr_folder=$(pwd)
@@ -17,34 +14,19 @@ echo "curr_folder_${curr_folder}"
 clear
 
 cd app || exit 1
- rm -rf build
-
+#  rm -rf build
+  # NOTE: Replace 'corne_dongle' with the actual shield name for your dongle if different
+  SHIELD_TARGET="cornixqf_dongle" 
 echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"
 
-# Determine build target and output filename suffix based on argument
-if [ "$ARG_TAG" == "L" ]; then
-    SHIELD_TARGET="corne_left"
-    FILE_SUFFIX="_left"
-    west build -b nice_nano \
-  -S studio-rpc-usb-uart \
-  -S zmk-usb-logging \
-  -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
-elif [ "$ARG_TAG" == "D" ]; then
-    # NOTE: Replace 'corne_dongle' with the actual shield name for your dongle if different
-    SHIELD_TARGET="cornix_dongle_adapter" 
-    FILE_SUFFIX="_dongle"
-    west build -b nice_nano \
-  -S studio-rpc-usb-uart \
-  -S zmk-usb-logging \
-  -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
-else
-    # Default to Right if no argument or argument is not L or D
-    SHIELD_TARGET="corne_right"
-    FILE_SUFFIX="_right"
-    west build -b nice_nano \
-  -- -DSHIELD=$SHIELD_TARGET
-fi
 
+
+  FILE_SUFFIX="_dongle"
+  west build -b nice_nano \
+-S studio-rpc-usb-uart \
+-S zmk-usb-logging \
+-S nrf52840-nosd \
+-- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
 
 
 #   -S zmk-usb-logging \

@@ -216,10 +216,11 @@ static void kscan_matrix_read_end(const struct device *dev) {
 }
 
 #include <zephyr/bluetooth/bluetooth.h>
+
 int zmk_ble_complete_startup_qf_peri(void) {
 
     LOG_WRN("Clearing all existing BLE bond information from the keyboard");
-
+    extern int bt_unpair(uint8_t id, const bt_addr_le_t *addr);
     bt_unpair(BT_ID_DEFAULT, NULL);
     extern int settings_delete(const char *name);
     for (int i = 0; i < 8; i++) {
