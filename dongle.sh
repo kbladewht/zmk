@@ -6,7 +6,7 @@ export HISTFILE=~/.bash_history_mx_kbd
 export ORIG_CWD=$(pwd)
 . ./common.sh
 export ZEPHYR_SDK_INSTALL_DIR="D:/zephyr-sdk-0.16.9"
-DRIVE_P=E
+DRIVE_P=F
 
 
 curr_folder=$(pwd)
@@ -20,6 +20,7 @@ cd app || exit 1
 echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"
 
 
+# -S zmk-usb-logging \
 # -S nrf52840-nosd \
 
   west build -b nice_nano \
