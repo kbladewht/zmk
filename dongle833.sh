@@ -21,28 +21,15 @@ cd app || exit 1
 
 echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"
 
-# Determine build target and output filename suffix based on argument
-if [ "$ARG_TAG" == "L" ]; then
-    SHIELD_TARGET="corne_left"
-    FILE_SUFFIX="_left"
-    west build -b nice_nano \
-  -S studio-rpc-usb-uart \
-  -S zmk-usb-logging \
-  -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
-elif [ "$ARG_TAG" == "D" ]; then
+
     # NOTE: Replace 'corne_dongle' with the actual shield name for your dongle if different
     SHIELD_TARGET="cornixqf_dongle" 
     FILE_SUFFIX="_dongle"
     west build -b nice_nano_k \
   -S studio-rpc-usb-uart \
+  -S zmk-usb-logging \
+  -S nrf52833-nosd \
   -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
-else
-    # Default to Right if no argument or argument is not L or D
-    SHIELD_TARGET="corne_right"
-    FILE_SUFFIX="_right"
-    west build -b nice_nano \
-  -- -DSHIELD=$SHIELD_TARGET
-fi
 
 
 

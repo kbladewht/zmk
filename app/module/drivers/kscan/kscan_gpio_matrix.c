@@ -221,7 +221,7 @@ int zmk_ble_complete_startup_qf_peri(void) {
     LOG_WRN("Clearing all existing BLE bond information from the keyboard");
 
     bt_unpair(BT_ID_DEFAULT, NULL);
-
+    extern int settings_delete(const char *name);
     for (int i = 0; i < 8; i++) {
         char setting_name[15];
         sprintf(setting_name, "ble/profiles/%d", i);

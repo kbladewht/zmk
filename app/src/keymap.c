@@ -332,6 +332,8 @@ static void handle_bootloader_entry(uint16_t binding_idx,
 
         // 1. 先断开所有连接（模拟 BT_DISC_CMD 对所有 profile）
         for (int i = 0; i < 2; i++) {
+            extern bool zmk_ble_profile_is_connected(uint8_t index);
+            extern int zmk_ble_prof_disconnect(uint8_t index);
             if (zmk_ble_profile_is_connected(i)) {
                 LOG_INF("Disconnecting profile %d", i);
                 zmk_ble_prof_disconnect(i);
