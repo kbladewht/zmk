@@ -14,7 +14,7 @@ echo "curr_folder_${curr_folder}"
 clear
 
 cd app || exit 1
-  rm -rf build
+  # rm -rf build
   # NOTE: Replace 'corne_dongle' with the actual shield name for your dongle if different
   SHIELD_TARGET="cornixqf_dongle" 
 echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"

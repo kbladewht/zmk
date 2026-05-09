@@ -89,26 +89,24 @@ zephyr_udc0: &usbd {
         #size-cells = <1>;
 
         sd_partition: partition@0 {
-            reg = <0x00000000 0x00027000>;
+            reg = <0x00000000 0x00001000>;//System reserved
         };
-        code_partition: partition@27000 {
-            reg = <0x00027000 0x0004B000>;
+        qmkcode_partition: partition@1000 {
+            reg = <0x00001000 0x0001E000>;//120K （4k-124KB）
         };
-
-      /*
-         * The flash starting at 0x0006c000 and ending at
-         * 0x00073fff is reserved for use by the application.
-         */
-
-        /*
-         * Storage partition will be used by FCB/LittleFS/NVS
-         * if enabled.
-         */
-        storage_partition: partition@72000 {
-            reg = <0x00072000 0x00002000>;
+        code_partition: partition@1F000 {
+            reg = <0x0001F000 0x00045000>; //276K (124k-400k)
         };
 
-        boot_partition: partition@74000 {
+        storage_partition: partition@64000 {
+            reg = <0x00064000 0x00008000>;//32K (400K-432K)
+        };
+
+        qmk_eeprom_partition: partition@6c000 {
+            reg = <0x0006c000 0x00008000>;//(432K-464k)
+        };
+
+        boot_partition: partition@74000 {//464k-512k 48k
             reg = <0x00074000 0x0000c000>;
         };
     };
