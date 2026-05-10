@@ -347,6 +347,15 @@ static void handle_bootloader_entry(uint16_t binding_idx,
         // 2. 延迟 500ms 确保清除完成
         LOG_INF("Delaying 500ms for BLE clear to complete...");
     }
+
+    // ★★★★★ Check for reset binding ★★★★★
+    if (strcmp(binding->behavior_dev, "bluetooth") == 0 && binding->param1 == 0x00000003) {
+        LOG_INF(" ESB switch kb behavior='%s' \n", binding->behavior_dev);
+
+        NRF_POWER->GPREGRET2 = 0xE5; // 代表转向esb
+        extern FUNC_NORETURN void sys_reboot(int type);
+        sys_reboot(0); // SYS_REBOOT_WARM 0
+    }
     // ★★★★★★★★★★★★★★★★★★★★
 }
 
