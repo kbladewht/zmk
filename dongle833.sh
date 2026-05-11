@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Set history file path
-export HISTFILE=~/.bash_history_mx_kbd
 # Make clean
 export ORIG_CWD=$(pwd)
 . ./common.sh
@@ -34,7 +32,6 @@ echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"
 
 
 #   -S zmk-usb-logging \
-
 
 
 SRC_FILE="build/zephyr/zmk.uf2"
