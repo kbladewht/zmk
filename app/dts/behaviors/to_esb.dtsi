@@ -13,6 +13,7 @@
             #binding-cells = <1>;
             status = "okay";   // ← 这一行非常关键
             display-name = "To ESB";
+            esb_mode;
         };
     };
 };

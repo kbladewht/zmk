@@ -17,21 +17,23 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
 struct behavior_to_config {
-    bool locking;
+    bool esb_mode;
 };
 static int esb_binding_pressed(struct zmk_behavior_binding *binding,
                                struct zmk_behavior_binding_event event) {
     LOG_DBG("position %d layer %d", event.position, binding->param1);
-    // const struct behavior_to_config *cfg =
-    // zmk_behavior_get_binding(binding->behavior_dev)->config;
+    const struct behavior_to_config *cfg = zmk_behavior_get_binding(binding->behavior_dev)->config;
 
-    LOG_INF("11 22222 33 to_esb_binding_pressed for esb 111`1 \n");
+    LOG_INF("Change to esb %d \n", cfg->esb_mode);
+    NRF_POWER->GPREGRET2 = 0xE5; // 代表转向esb
+    extern FUNC_NORETURN void sys_reboot(int type);
+    sys_reboot(0); // SYS_REBOOT_WARM 0
     return ZMK_BEHAVIOR_OPAQUE;
 }
 
 static int esb_binding_released(struct zmk_behavior_binding *binding,
                                 struct zmk_behavior_binding_event event) {
-    LOG_DBG("2222 position %d layer %d\n", event.position, binding->param1);
+    // LOG_DBG("2222 position %d layer %d\n", event.position, binding->param1);
     return ZMK_BEHAVIOR_OPAQUE;
 }
 
