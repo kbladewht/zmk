@@ -1,0 +1,13 @@
+# Copyright (c) 2020 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+description: To Layer
+
+compatible: "zmk,behavior-to-esb"
+
+include: one_param.yaml
+
+properties:
+  locking:
+    type: boolean
+    description: switch to esb mode

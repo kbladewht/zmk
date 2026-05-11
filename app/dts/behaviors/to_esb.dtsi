@@ -1,0 +1,18 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <dt-bindings/zmk/behaviors.h>
+
+/ {
+    behaviors {
+        to_esb: to_esb {
+            compatible = "zmk,behavior-to-esb";
+            #binding-cells = <1>;
+            status = "okay";   // ← 这一行非常关键
+            display-name = "To ESB";
+        };
+    };
+};
