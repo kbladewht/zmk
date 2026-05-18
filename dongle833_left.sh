@@ -16,17 +16,16 @@ clear
 
 cd app || exit 1
  rm -rf build
-
+  # -S nrf52833-nosd 
 echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"
 
 
     # NOTE: Replace 'corne_dongle' with the actual shield name for your dongle if different
     SHIELD_TARGET="corne_left" 
-    FILE_SUFFIX="_dongle"
+    FILE_SUFFIX="_corne_left"
     west build -b nice_nano_k \
   -S studio-rpc-usb-uart \
   -S zmk-usb-logging \
-  -S nrf52833-nosd \
   -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
 
 
@@ -42,6 +41,8 @@ DEST_FILE2="../flash${FILE_SUFFIX}_833.uf2"
 
 echo "Copying $SRC_FILE to $DEST_FILE2"
 cp "$SRC_FILE" "$DEST_FILE2"
+echo "Copying $SRC_FILE to /c/Users/dellht/Downloads/zmk_${FILE_SUFFIX}.uf2"
+cp "$SRC_FILE" "/c/Users/dellht/Downloads/zmk_${FILE_SUFFIX}.uf2"
 
 polling_check
 echo "Copying $SRC_FILE to $DEST_FILE"
