@@ -23,10 +23,9 @@ echo "Building for: $SHIELD_TARGET (Tag: $ARG_TAG)"
     # NOTE: Replace 'corne_dongle' with the actual shield name for your dongle if different
     SHIELD_TARGET="corne_left" 
     FILE_SUFFIX="_corne_left"
-    west build -b nice_nano_k \
+    west build -b nice_nano \
   -S studio-rpc-usb-uart \
   -S zmk-usb-logging \
-  -S nrf52833-nosd \
   -- -DSHIELD=$SHIELD_TARGET -DCONFIG_ZMK_STUDIO=y
 
 

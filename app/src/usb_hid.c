@@ -41,8 +41,9 @@ static void in_ready_cb(const struct device *dev) { k_sem_give(&hid_sem); }
 
 #if IS_ENABLED(CONFIG_ZMK_USB_BOOT)
 static uint8_t hid_protocol = HID_PROTOCOL_REPORT;
-
-static void set_proto_cb(const struct device *dev, uint8_t protocol) { hid_protocol = protocol; }
+sdfsf static void set_proto_cb(const struct device *dev, uint8_t protocol) {
+    hid_protocol = protocol;
+}
 
 void zmk_usb_hid_set_protocol(uint8_t protocol) { hid_protocol = protocol; }
 #endif /* IS_ENABLED(CONFIG_ZMK_USB_BOOT) */
@@ -121,6 +122,8 @@ static int get_report_cb(const struct device *dev, struct usb_setup_packet *setu
 
 static int set_report_cb(const struct device *dev, struct usb_setup_packet *setup, int32_t *len,
                          uint8_t **data) {
+
+    LOG_INF("Set report 6666");
     switch (setup->wValue & HID_GET_REPORT_TYPE_MASK) {
     case HID_REPORT_TYPE_FEATURE:
         switch (setup->wValue & HID_GET_REPORT_ID_MASK) {
@@ -174,7 +177,10 @@ static int set_report_cb(const struct device *dev, struct usb_setup_packet *setu
 
     return 0;
 }
-
+static void kb_output_report(const struct device *dev, const uint16_t len,
+                             const uint8_t *const buf) {
+    LOG_INF("KB output report");
+}
 static const struct hid_ops ops = {
 #if IS_ENABLED(CONFIG_ZMK_USB_BOOT)
     .protocol_change = set_proto_cb,
@@ -185,6 +191,7 @@ static const struct hid_ops ops = {
 };
 
 static int zmk_usb_hid_send_report(const uint8_t *report, size_t len) {
+    LOG_INF("Sending report");
     switch (zmk_usb_get_status()) {
     case USB_DC_SUSPEND:
         return usb_wakeup_request();

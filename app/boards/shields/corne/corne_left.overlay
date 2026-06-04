@@ -5,7 +5,7 @@
  */
 
 #include "corne.dtsi"
-
+#include <dt-bindings/zmk/hid_indicators.h>
 &kscan0 {
      diode-direction = "col2row";
     row-gpios
@@ -30,5 +30,33 @@
         clock-frequency = <32768>;
         #clock-cells = <0>;
         status = "okay";
+    };
+};
+
+/ {
+    leds {
+        compatible = "gpio-leds";
+
+        num_lock_led: num_lock_led {
+            gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+        };
+
+        caps_lock_led: caps_lock_led {
+            gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
+        };
+    };
+
+    indicators {
+        compatible = "zmk,indicator-leds";
+
+        num_lock_indicator: num_lock {
+            indicator = <HID_INDICATOR_NUM_LOCK>;
+            leds = <&num_lock_led>;
+        };
+
+        caps_lock_indicator: caps_lock {
+            indicator = <HID_INDICATOR_CAPS_LOCK>;
+            leds = <&caps_lock_led>;
+        };
     };
 };

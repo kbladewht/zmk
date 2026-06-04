@@ -86,21 +86,29 @@ zephyr_udc0: &usbd {
         #address-cells = <1>;
         #size-cells = <1>;
 
-       sd_partition: partition@0 {
-            reg = <0x00000000 0x00001000>;//System reserved
-        };
-        qmkcode_partition: partition@1000 {
-            reg = <0x00001000 0x0001E000>;//120K （4k-124KB）
-        };
-        code_partition: partition@1F000 {
-            reg = <0x0001F000 0x00045000>; //276K (124k-400k)
+        sd_partition: partition@0 {
+            reg = <0x00000000 0x00026000>;
         };
 
-        storage_partition: partition@64000 {
-            reg = <0x00064000 0x00008000>;//32K (400K-432K)
+        /*
+         *  给 ZMK app 使用 488kb 
+         */
+        code_partition: partition@26000 {
+            reg = <0x00026000 0x0007A000>;//152->640 (488kb)
         };
-        qmk_eeprom_partition: partition@6c000 {
-            reg = <0x0006c000 0x00008000>;//(432K-464k)
+
+        /*
+            给qmk使用304kb 大小的分区
+        */
+        qmk_partition: partition@a0000 {
+            reg = <0x000a0000 0x0004C000>;  //640K -> 944K (304kb)
+        };
+
+        /*
+         * zmk 存储使用
+         */
+        storage_partition: partition@ec000 {
+            reg = <0x000ec000 0x00008000>;//944K -> 976kb (32kb)
         };
 
         //bootloader 使用

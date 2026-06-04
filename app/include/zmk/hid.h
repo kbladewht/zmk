@@ -76,6 +76,12 @@
 #define ZMK_HID_REPORT_ID_LEDS 0x01
 #define ZMK_HID_REPORT_ID_CONSUMER 0x02
 #define ZMK_HID_REPORT_ID_MOUSE 0x03
+#define ZMK_HID_REPORT_ID_RAW 0x05
+#define RAW_EPSIZE 32
+#define HID_IOF_DATA                            (0 << 0)
+#define HID_IOF_VARIABLE                        (1 << 1)
+#define HID_IOF_ABSOLUTE                        (0 << 2)
+#define HID_IOF_NON_VOLATILE                    (0 << 7)
 
 #ifndef HID_ITEM_TAG_PUSH
 #define HID_ITEM_TAG_PUSH 0xA
@@ -253,6 +259,33 @@ static const uint8_t zmk_hid_report_desc[] = {
     HID_END_COLLECTION,
     HID_END_COLLECTION,
 #endif // IS_ENABLED(CONFIG_ZMK_POINTING)
+
+
+    0x06, 0x60, 0xFF,  // Usage Page (Vendor Defined 0xFF60)
+    HID_USAGE(0x61),          // RAW_USAGE_ID
+    HID_COLLECTION(HID_COLLECTION_APPLICATION),
+
+        HID_REPORT_ID(ZMK_HID_REPORT_ID_RAW),
+
+        /* Input: device → host */
+        HID_USAGE(0x62),
+        HID_LOGICAL_MIN8(0x00),
+        HID_LOGICAL_MAX16(0xFF, 0x00),
+
+        HID_REPORT_COUNT(RAW_EPSIZE),
+        HID_REPORT_SIZE(0x08),
+        HID_INPUT(HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+
+        /* Output: host → device */
+        HID_USAGE(0x63),
+        HID_LOGICAL_MIN8(0x00),//0x15, 0x00,        //   Logical Minimum (0)
+        HID_LOGICAL_MAX16(0xFF, 0x00),//0x26, 0xFF, 0x00,  //   Logical Maximum (255)
+
+        HID_REPORT_COUNT(RAW_EPSIZE),
+        HID_REPORT_SIZE(0x08),
+        HID_OUTPUT(HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE | HID_IOF_NON_VOLATILE),
+
+    HID_END_COLLECTION,//0xc0,
 };
 
 #if IS_ENABLED(CONFIG_ZMK_USB_BOOT)
