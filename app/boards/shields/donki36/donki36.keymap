@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+#include <behaviors.dtsi>
+#include <behaviors/studio_unlock.dtsi>
+
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/mouse.h>
+#include <dt-bindings/zmk/input_transform.h>
+
+
+#define BAS 0
+#define GME 1
+#define NUP 2
+#define LHB 3
+
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        BAS_layer {
+            display-name = "Base";
+            bindings = <
+                &kp Q          &kp W          &kp E          &kp R          &kp T               &kp Y          &kp U          &kp I          &kp O          &kp P
+                &kp A          &kp S          &kp D          &kp F          &kp G               &kp H          &kp J          &kp K          &kp L          &kp SEMI
+                &kp Z          &kp X          &kp C          &kp V          &kp B               &kp N          &kp M          &kp COMMA      &kp DOT        &kp FSLH
+                                  &kp ESC   &kp LGUI       &kp TAB                           &kp RET        &kp SPACE      &kp BKSP
+            >;
+        };
+    };
+};

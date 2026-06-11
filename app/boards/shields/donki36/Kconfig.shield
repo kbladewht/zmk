@@ -1,0 +1,10 @@
+# Copyright (c) 2020 Pete Johanson
+# SPDX-License-Identifier: MIT
+
+
+config SHIELD_DONKI36_LEFT
+	def_bool $(shields_list_contains,donki36_left)s
+
+config SHIELD_DONKI36_RIGHT
+	def_bool $(shields_list_contains,donki36_right)
+
