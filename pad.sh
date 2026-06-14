@@ -15,7 +15,7 @@ export ZMK_ESB_MODULE_DIRS="../zmk-feature-split-esb"
 # export ZMK_MODULE_DIRS="${ZMK_ESB_MODULE_DIRS};${NRF_MODULE_DIRS};${NRFXLIB_MODULE_DIRS}"
 # export SHIELD="donki36_left"
 
-export SHIELD="donki36_left"
+export SHIELD="p42_right"
 export BOARD="nice_nano_k"
 # export ZMK_CONFIG_DIR="/d/project/GitHub/zmkesb/zmk-config/config"
 export ZMK_CONFIG_DIR="../zmk-config"
@@ -24,12 +24,12 @@ export ZMK_CONFIG_DIR="../zmk-config"
 rm -rf build
 rm -rf app/build
 
-west build -s app -d "build/donki36_left" -b nice_nano_k -S zmk-usb-logging -- \
-  -DSHIELD=donki36_left -DZMK_CONFIG="../zmk-config" 
+west build -s app -d "build/${SHIELD}" -b nice_nano_k -S zmk-usb-logging -- \
+  -DSHIELD="${SHIELD}" -DZMK_CONFIG="../zmk-config" 
   #  -DBOARD_ROOT="/d/project/GitHub/zmkesb/zmk"
 
 
   # cp "/d/project/GitHub/zmkesb/zmk/zmkesb/zmk/build/zephyr/zmk.uf2"
 
 # zmkesb\zmk\build\donki36_left\zephyr
-cp "/d/project/GitHub/zmkesb/zmk/build/donki36_left/zephyr/zmk.uf2" "E:/flash.uf2"
+cp "/d/project/GitHub/zmkesb/zmk/build/p42_right/zephyr/zmk.uf2" "E:/flash.uf2"

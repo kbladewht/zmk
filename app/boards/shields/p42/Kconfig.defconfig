@@ -1,0 +1,20 @@
+if SHIELD_P42_LEFT
+
+config ZMK_KEYBOARD_NAME
+	default "P42-usb"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+	default y
+
+endif
+
+if SHIELD_P42_LEFT || SHIELD_P42_RIGHT
+
+config ZMK_SPLIT
+	default y
+	
+endif
+
+
+
+

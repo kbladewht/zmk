@@ -1,0 +1,10 @@
+config SHIELD_P42_LEFT
+    def_bool $(shields_list_contains,p42_left)
+
+config SHIELD_P42_RIGHT
+    def_bool $(shields_list_contains,p42_right)
+
+config ZMK_QF_595
+    bool "Enable my 595"
+    default y
+

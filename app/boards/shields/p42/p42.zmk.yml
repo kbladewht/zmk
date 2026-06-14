@@ -1,0 +1,12 @@
+file_format: "1"
+id: p42
+name: p42
+type: shield
+url: https://github.com/p42
+# requires: [pro_micro]
+features:
+  - keys
+  - underglow
+siblings:
+  - p42_left
+  - p42_right
