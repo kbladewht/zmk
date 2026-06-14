@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.13.1)
 
 set(CONFIG_APPLICATION_DEFINED_SYSCALL true)
-
+#D:/project/GitHub/zmkesb/zmk/zmk-feature-split-esb
 set(ZEPHYR_BOARD_ALIASES "boards/aliases.cmake")
 set(ZEPHYR_EXTRA_MODULES "${ZMK_EXTRA_MODULES};${CMAKE_CURRENT_SOURCE_DIR}/module;${CMAKE_CURRENT_SOURCE_DIR}/keymap-module")
+message(STATUS "111111: ${CMAKE_CURRENT_SOURCE_DIR}")
+list(APPEND ZEPHYR_EXTRA_MODULES
+  "D:/project/GitHub/zmkesb/zmk-feature-split-esb"
+  ${CMAKE_CURRENT_SOURCE_DIR}/../nrf
+  ${CMAKE_CURRENT_SOURCE_DIR}/../nrfxlib
+)
+
 
 # Find Zephyr. This also loads Zephyr's build system.
 find_package(Zephyr REQUIRED HINTS ../zephyr)
