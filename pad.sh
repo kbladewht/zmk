@@ -25,7 +25,7 @@ rm -rf build
 rm -rf app/build
 
 west build -s app -d "build/donki36_left" -b nice_nano_k -S zmk-usb-logging -- \
-  -DSHIELD=donki36_left -DZMK_CONFIG="../zmk-config" \
+  -DSHIELD=donki36_left -DZMK_CONFIG="../zmk-config" 
   #  -DBOARD_ROOT="/d/project/GitHub/zmkesb/zmk"
 
 
