@@ -3,7 +3,7 @@
 
 
 config SHIELD_DONKI36_LEFT
-	def_bool $(shields_list_contains,donki36_left)s
+	def_bool $(shields_list_contains,donki36_left)
 
 config SHIELD_DONKI36_RIGHT
 	def_bool $(shields_list_contains,donki36_right)
