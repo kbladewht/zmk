@@ -164,3 +164,16 @@
         led2 = &led2;
     };
 };
+
+
+
+#include "donki36__esb_addr.dtsi"
+
+
+/ {
+    soc {
+        pin-controller {
+            #binding-cells = <0>;
+        };
+    };
+};
