@@ -9,4 +9,5 @@ features:
   - underglow
 siblings:
   - p42_left
+  - p42_c
   - p42_right
