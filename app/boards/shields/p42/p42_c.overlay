@@ -1,5 +1,5 @@
 
- 
+
 #include "p42.dtsi"
 
 
@@ -39,7 +39,7 @@
                 NRF_PSEL(SPIM_SCK, 0, 6)
                 NRF_PSEL(SPIM_MOSI, 0, 5)
             >;
-            
+
         };
     };
 
@@ -117,7 +117,7 @@
 
 
 
-#include "donki36__esb_addr.dtsi"
+// #include "donki36__esb_addr.dtsi"
 
 
 / {

@@ -54,10 +54,7 @@ static enum zmk_transport preferred_transport = DEFAULT_TRANSPORT;
 static void update_current_endpoint(void);
 
 #if IS_ENABLED(CONFIG_SETTINGS)
-static void endpoints_save_preferred_work(struct k_work *work) {
-    settings_save_one(SETTING_PREFERRED_TRANSPORT, &preferred_transport,
-                      sizeof(preferred_transport));
-}
+static void endpoints_save_preferred_work(struct k_work *work) { settings_save_one(SETTING_PREFERRED_TRANSPORT, &preferred_transport, sizeof(preferred_transport)); }
 
 static struct k_work_delayable endpoints_save_work;
 #endif
@@ -143,8 +140,7 @@ int zmk_endpoint_set_preferred_transport(enum zmk_transport transport) {
 enum zmk_transport zmk_endpoint_get_preferred_transport(void) { return preferred_transport; }
 
 int zmk_endpoint_toggle_preferred_transport(void) {
-    enum zmk_transport new_transport =
-        (preferred_transport == ZMK_TRANSPORT_USB) ? ZMK_TRANSPORT_BLE : ZMK_TRANSPORT_USB;
+    enum zmk_transport new_transport = (preferred_transport == ZMK_TRANSPORT_USB) ? ZMK_TRANSPORT_BLE : ZMK_TRANSPORT_USB;
     return zmk_endpoint_set_preferred_transport(new_transport);
 }
 
@@ -165,9 +161,7 @@ static struct zmk_endpoint_instance get_instance_from_transport(enum zmk_transpo
     return instance;
 }
 
-struct zmk_endpoint_instance zmk_endpoint_get_preferred(void) {
-    return get_instance_from_transport(preferred_transport);
-}
+struct zmk_endpoint_instance zmk_endpoint_get_preferred(void) { return get_instance_from_transport(preferred_transport); }
 
 struct zmk_endpoint_instance zmk_endpoint_get_selected(void) { return current_instance; }
 
@@ -248,7 +242,7 @@ static int send_consumer_report(void) {
 }
 
 int zmk_endpoint_send_report(uint16_t usage_page) {
-    LOG_DBG("usage page 0x%02X", usage_page);
+    LOG_DBG("11111usage page 0x%02X", usage_page);
     switch (usage_page) {
     case HID_USAGE_KEY:
         return send_keyboard_report();
@@ -350,8 +344,7 @@ static int endpoint_settings_load_preferred_v1(size_t len, settings_read_cb read
         return err;
     }
 
-    err = settings_save_one(SETTING_PREFERRED_TRANSPORT, &preferred_transport,
-                            sizeof(preferred_transport));
+    err = settings_save_one(SETTING_PREFERRED_TRANSPORT, &preferred_transport, sizeof(preferred_transport));
     if (err == 0) {
         LOG_INF("Upgraded preferred endpoint setting");
     } else {
@@ -366,8 +359,7 @@ static int endpoint_settings_load_preferred_v1(size_t len, settings_read_cb read
  */
 static int endpoint_settings_load_preferred_v2(size_t len, settings_read_cb read_cb, void *cb_arg) {
     if (len != sizeof(preferred_transport)) {
-        LOG_ERR("Invalid zmk_transport size (got %zu expected %zu)", len,
-                sizeof(preferred_transport));
+        LOG_ERR("Invalid zmk_transport size (got %zu expected %zu)", len, sizeof(preferred_transport));
         return -EINVAL;
     }
 
@@ -380,8 +372,7 @@ static int endpoint_settings_load_preferred_v2(size_t len, settings_read_cb read
     return 0;
 }
 
-static int endpoint_settings_set(const char *name, size_t len, settings_read_cb read_cb,
-                                 void *cb_arg) {
+static int endpoint_settings_set(const char *name, size_t len, settings_read_cb read_cb, void *cb_arg) {
     LOG_DBG("Setting endpoint value %s", name);
 
     if (settings_name_steq(name, SETTING_PREFERRED_TRANSPORT_KEY, NULL)) {
@@ -400,8 +391,7 @@ static int endpoint_settings_commit(void) {
     return 0;
 }
 
-SETTINGS_STATIC_HANDLER_DEFINE(endpoints, SETTING_SUBTREE, NULL, endpoint_settings_set,
-                               endpoint_settings_commit, NULL);
+SETTINGS_STATIC_HANDLER_DEFINE(endpoints, SETTING_SUBTREE, NULL, endpoint_settings_set, endpoint_settings_commit, NULL);
 
 #endif /* IS_ENABLED(CONFIG_SETTINGS) */
 
@@ -454,9 +444,7 @@ static enum zmk_transport get_selected_transport(void) {
     return ZMK_TRANSPORT_NONE;
 }
 
-static struct zmk_endpoint_instance get_selected_instance(void) {
-    return get_instance_from_transport(get_selected_transport());
-}
+static struct zmk_endpoint_instance get_selected_instance(void) { return get_instance_from_transport(get_selected_transport()); }
 
 static int zmk_endpoints_init(void) {
 #if IS_ENABLED(CONFIG_SETTINGS)
