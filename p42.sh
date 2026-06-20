@@ -19,7 +19,7 @@ export ZMK_CONFIG_DIR="../zmk-config"
 rm -rf build
 rm -rf app/build
 
-west build -s app -d "build/${SHIELD}" -b nice_nano_k -S zmk-usb-logging -- \
+west build -s app -d "build/${SHIELD}" -b nice_nano_x -S zmk-usb-logging -- \
   -DSHIELD="${SHIELD}" -DZMK_CONFIG="../zmk-config" 
   #  -DBOARD_ROOT="/d/project/GitHub/zmkesb/zmk"
 

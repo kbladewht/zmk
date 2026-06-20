@@ -44,6 +44,8 @@ struct reg_595_drv_data {
 };
 
 static int reg_595_write_registers(const struct device *dev, uint32_t value) {
+
+    // LOG_INF("reg_595_write_registers 111");
     const struct reg_595_config *config = dev->config;
     struct reg_595_drv_data *const drv_data = (struct reg_595_drv_data *const)dev->data;
     int ret = 0;
@@ -98,6 +100,7 @@ static int reg_595_port_set_masked_raw(const struct device *dev, uint32_t mask, 
 
     /* Can't do SPI bus operations from an ISR */
     if (k_is_in_isr()) {
+        // LOG_ERR("595: k_is_in_isr ");
         return -EWOULDBLOCK;
     }
 
@@ -105,10 +108,12 @@ static int reg_595_port_set_masked_raw(const struct device *dev, uint32_t mask, 
 
     buf = drv_data->gpio_cache;
     buf = (buf & ~mask) | (mask & value);
-
+    // LOG_INF("reg_595_write_registers 000");
     ret = reg_595_write_registers(dev, buf);
+    // LOG_INF("reg_595_write_registers 222");
 
     k_sem_give(&drv_data->lock);
+    // LOG_INF("reg_595_write_registers 333");
     return ret;
 }
 
@@ -127,9 +132,10 @@ static int reg_595_port_toggle_bits(const struct device *dev, uint32_t mask) {
 
     /* Can't do SPI bus operations from an ISR */
     if (k_is_in_isr()) {
+        LOG_ERR("EWOULDBLOCK 11111");
         return -EWOULDBLOCK;
     }
-
+LOG_ERR("EWOULDBLOCK 22222");
     k_sem_take(&drv_data->lock, K_FOREVER);
 
     buf = drv_data->gpio_cache;
@@ -146,24 +152,30 @@ static int reg_595_pin_config(const struct device *dev, gpio_pin_t pin, gpio_fla
 
     /* Can't do SPI bus operations from an ISR */
     if (k_is_in_isr()) {
+        
+        LOG_INF("6666666");
         return -EWOULDBLOCK;
     }
 
     if ((flags & GPIO_OPEN_DRAIN) != 0U) {
+        LOG_INF("99999");
         return -ENOTSUP;
     };
 
     ret = setup_pin_dir(dev, pin, flags);
     if (ret) {
-        LOG_ERR("595: error setting pin direction (%d)", ret);
+        LOG_ERR("595: 2222 error setting pin direction (%d)", ret);
     }
 
     if ((flags & GPIO_OUTPUT_INIT_LOW) != 0) {
         return reg_595_port_clear_bits_raw(dev, BIT(pin));
     } else if ((flags & GPIO_OUTPUT_INIT_HIGH) != 0) {
-        return reg_595_port_set_bits_raw(dev, BIT(pin));
+        LOG_INF("5555555");
+        int ss= reg_595_port_set_bits_raw(dev, BIT(pin));
+ LOG_INF("66666");
+        return ss;
     }
-
+ LOG_INF("oo1111");
     return ret;
 }
 

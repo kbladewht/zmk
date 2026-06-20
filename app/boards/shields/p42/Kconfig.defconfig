@@ -1,4 +1,4 @@
-if SHIELD_P42_LEFT || SHIELD_P42_C
+if SHIELD_P42_C
 
 config ZMK_KEYBOARD_NAME
 	default "P42-usb"

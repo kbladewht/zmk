@@ -17,18 +17,15 @@ export NRFXLIB_MODULE_DIRS="../zmk-feature-split-esb/nrfxlib"
 export ZMK_ESB_MODULE_DIRS="../zmk-feature-split-esb"
 
 export SHIELD="p42_c"
-export BOARD="nice_nano_k"
+export BOARD="nice_nano_x"
 export ZMK_CONFIG_DIR="../zmk-config"
 
 # cd app
 rm -rf build
 rm -rf app/build
 
-# west build -s app -d "build/${SHIELD}" -b nice_nano_k -S zmk-usb-logging -- \
-#   -DSHIELD="${SHIELD}" -DZMK_CONFIG="../zmk-config" 
-  #  -DBOARD_ROOT="/d/project/GitHub/zmkesb/zmk"
 
-west build -s app -d "build/${SHIELD}" -b nice_nano_k -- \
+west build -s app -d "build/${SHIELD}" -b nice_nano_x -S zmk-usb-logging  -- \
   -DSHIELD="${SHIELD}" -DZMK_CONFIG="../zmk-config" 
 
 # west -v build
