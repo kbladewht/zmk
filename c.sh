@@ -29,7 +29,7 @@ rm -rf app/build
   #  -DBOARD_ROOT="/d/project/GitHub/zmkesb/zmk"
 
 west build -s app -d "build/${SHIELD}" -b nice_nano_k -- \
-  -DSHIELD="${SHIELD}" -DZMK_CONFIG="../zmk-config" 
+  -DSHIELD="${SHIELD}" -DZMK_CONFIG="../zmk-config" s
 
 # west -v build
 SRC_FILE="build/${SHIELD}/zephyr/zmk.uf2"

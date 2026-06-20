@@ -38,10 +38,8 @@ RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5)  RC(3,6)  RC(3,7) RC(3,8) RC(3,9
 p42: p42 {
 		compatible = "zmk,physical-layout";
 		display-name = "matrix layout";
-	 kscan = <&kscan0>;
+	    kscan = <&kscan0>;
 		transform = <&default_transform>;
-
-      
     };
 
 

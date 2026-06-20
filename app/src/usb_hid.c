@@ -60,8 +60,7 @@ static uint8_t *get_keyboard_report(size_t *len) {
     return (uint8_t *)report;
 }
 
-static int get_report_cb(const struct device *dev, struct usb_setup_packet *setup, int32_t *len,
-                         uint8_t **data) {
+static int get_report_cb(const struct device *dev, struct usb_setup_packet *setup, int32_t *len, uint8_t **data) {
     switch (setup->wValue & HID_GET_REPORT_TYPE_MASK) {
     case HID_REPORT_TYPE_FEATURE:
         switch (setup->wValue & HID_GET_REPORT_ID_MASK) {
@@ -74,8 +73,7 @@ static int get_report_cb(const struct device *dev, struct usb_setup_packet *setu
             };
 
             *len = sizeof(struct zmk_hid_mouse_resolution_feature_report);
-            struct zmk_pointing_resolution_multipliers mult =
-                zmk_pointing_resolution_multipliers_get_profile(endpoint);
+            struct zmk_pointing_resolution_multipliers mult = zmk_pointing_resolution_multipliers_get_profile(endpoint);
 
             res_feature_report.body.wheel_res = mult.wheel;
             res_feature_report.body.hwheel_res = mult.hor_wheel;
@@ -111,16 +109,14 @@ static int get_report_cb(const struct device *dev, struct usb_setup_packet *setu
          * exist For requested reports that aren't input reports, return -ENOTSUP like the Zephyr
          * subsys does
          */
-        LOG_ERR("Unsupported report type %d requested", (setup->wValue & HID_GET_REPORT_TYPE_MASK)
-                                                            << 8);
+        LOG_ERR("Unsupported report type %d requested", (setup->wValue & HID_GET_REPORT_TYPE_MASK) << 8);
         return -ENOTSUP;
     }
 
     return 0;
 }
 
-static int set_report_cb(const struct device *dev, struct usb_setup_packet *setup, int32_t *len,
-                         uint8_t **data) {
+static int set_report_cb(const struct device *dev, struct usb_setup_packet *setup, int32_t *len, uint8_t **data) {
     switch (setup->wValue & HID_GET_REPORT_TYPE_MASK) {
     case HID_REPORT_TYPE_FEATURE:
         switch (setup->wValue & HID_GET_REPORT_ID_MASK) {
@@ -130,8 +126,7 @@ static int set_report_cb(const struct device *dev, struct usb_setup_packet *setu
                 return -EINVAL;
             }
 
-            struct zmk_hid_mouse_resolution_feature_report *report =
-                (struct zmk_hid_mouse_resolution_feature_report *)*data;
+            struct zmk_hid_mouse_resolution_feature_report *report = (struct zmk_hid_mouse_resolution_feature_report *)*data;
             struct zmk_endpoint_instance endpoint = {
                 .transport = ZMK_TRANSPORT_USB,
             };
@@ -167,8 +162,7 @@ static int set_report_cb(const struct device *dev, struct usb_setup_packet *setu
         }
         break;
     default:
-        LOG_ERR("Unsupported report type %d requested",
-                (setup->wValue & HID_GET_REPORT_TYPE_MASK) >> 8);
+        LOG_ERR("Unsupported report type %d requested", (setup->wValue & HID_GET_REPORT_TYPE_MASK) >> 8);
         return -ENOTSUP;
     }
 
@@ -208,7 +202,10 @@ static int zmk_usb_hid_send_report(const uint8_t *report, size_t len) {
 int zmk_usb_hid_send_keyboard_report(void) {
     size_t len;
     uint8_t *report = get_keyboard_report(&len);
-    return zmk_usb_hid_send_report(report, len);
+    // extern int zmk_split_esb_send_ct(uint8_t * report);
+    // zmk_split_esb_?send_ct(report);
+    zmk_usb_hid_send_report(report, len);
+    return 0;
 }
 
 int zmk_usb_hid_send_consumer_report(void) {

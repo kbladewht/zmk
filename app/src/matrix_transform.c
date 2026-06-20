@@ -11,8 +11,9 @@
 #include <zmk/matrix.h>
 #include <dt-bindings/zmk/matrix_transform.h>
 
+#include <zephyr/logging/log.h>
 #define DT_DRV_COMPAT zmk_matrix_transform
-
+LOG_MODULE_DECLARE(zmk, 3);
 struct zmk_matrix_transform {
     uint32_t const *lookup_table;
     size_t len;
@@ -75,22 +76,26 @@ const struct zmk_matrix_transform zmk_matrix_transform_default = {
 
 int32_t zmk_matrix_transform_row_column_to_position(zmk_matrix_transform_t mt, uint32_t row,
                                                     uint32_t column) {
-    column += mt->col_offset;
-    row += mt->row_offset;
+    
+      LOG_INF("11MT: input row=%d, col=%d, offset=(%d, %d)", row, column, mt->row_offset, mt->col_offset);
 
+       column += mt->col_offset;
+    row += mt->row_offset;
+     LOG_INF("22MT: after offset row=%d, col=%d", row, column);
     if (!mt->lookup_table) {
         return (row * mt->columns) + column;
-    }
+    }//////
 
     uint16_t lookup_index = ((row * mt->columns) + column);
     if (lookup_index >= mt->len) {
         return -EINVAL;
     }
+LOG_INF("55MT: ((row * mt->columns)=%d,column %d", ((row * mt->columns)),column);
 
     int32_t val = mt->lookup_table[lookup_index];
+    LOG_WRN("666: val ==  %d val=%d", val,lookup_index);
     if (val == 0) {
         return -EINVAL;
     }
-
     return val - INDEX_OFFSET;
 };

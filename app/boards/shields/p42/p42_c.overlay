@@ -117,7 +117,7 @@
 
 
 
-// #include "donki36__esb_addr.dtsi"
+#include "donki36__esb_addr.dtsi"
 
 
 / {
