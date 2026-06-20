@@ -9,5 +9,5 @@ config SHIELD_P42_RIGHT
 
 config ZMK_QF_595
     bool "Enable my 595"
-    default y
+    default n
 

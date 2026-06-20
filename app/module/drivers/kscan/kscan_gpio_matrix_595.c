@@ -16,6 +16,7 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/__assert.h>
 #include <zephyr/sys/util.h>
+// #include "keyboard.h"
 #include <zmk/debounce.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
@@ -119,11 +120,15 @@ static int kscan_matrix_set_all_outputs(const struct device *dev, const int valu
     const struct kscan_matrix_config *config = dev->config;
 
     for (int i = 0; i < config->outputs.len; i++) {
-        const struct gpio_dt_spec *gpio = &config->outputs.gpios[i].spec;
-
-        int err = gpio_pin_set_dt(gpio, value);
+        // const struct gpio_dt_spec *gpio = &config->outputs.gpios[i].spec;
+        const struct kscan_gpio *out_gpio = &config->outputs.gpios[i];
+        
+        // gpio_pin_set_dt(&out_gpio, 1);
+         int err = gpio_pin_set_dt(&out_gpio->spec, value);
+        // int err = gpio_pin_set_dt(&gpio, value);
         if (err) {
-            LOG_ERR("Failed to set output %i to %i: %i", i, value, err);
+            // LOG_INF("GPIO port name = %s", out_gpio->spec.port->name);
+            // LOG_ERR("3333 Failed to set output %i to %i: %i", i, value, err);
             return err;
         }
     }
@@ -140,7 +145,7 @@ static int kscan_matrix_interrupt_configure(const struct device *dev, const gpio
         //这个是电平中断如果row 一直是active 那么会一直触发中断!!!!!!
         const struct gpio_dt_spec *gpio = &data->inputs.gpios[i].spec;
 
-        // LOG_INF("22222 Configure interrupt for pin %u on %s", gpio->pin, gpio->port->name);
+       // LOG_INF("22222 Configure interrupt for pin %u on %s", gpio->pin, gpio->port->name);
         int err = gpio_pin_interrupt_configure_dt(gpio, flags);
         if (err) {
             LOG_ERR("11111 Unable to configure interrupt for pin %u on %s", gpio->pin, gpio->port->name);
@@ -154,6 +159,7 @@ static int kscan_matrix_interrupt_configure(const struct device *dev, const gpio
 
 #if USE_INTERRUPTS
 static int kscan_matrix_interrupt_enable(const struct device *dev) {
+    kscan_matrix_set_all_outputs(dev, 0);
     int err = kscan_matrix_interrupt_configure(dev, GPIO_INT_LEVEL_ACTIVE);
     if (err) {
         return err;
@@ -161,12 +167,14 @@ static int kscan_matrix_interrupt_enable(const struct device *dev) {
 
     // While interrupts are enabled, set all outputs active so a pressed key
     // will trigger an interrupt.
-    return kscan_matrix_set_all_outputs(dev, 1);
+    return err;
 }
 #endif
 
 #if USE_INTERRUPTS
 static int kscan_matrix_interrupt_disable(const struct device *dev) {
+
+    kscan_matrix_set_all_outputs(dev, 1);
     int err = kscan_matrix_interrupt_configure(dev, GPIO_INT_DISABLE);
     if (err) {
         return err;
@@ -174,7 +182,7 @@ static int kscan_matrix_interrupt_disable(const struct device *dev) {
 
     // While interrupts are disabled, set all outputs inactive so
     // kscan_matrix_read() can scan them one by one.
-    return kscan_matrix_set_all_outputs(dev, 0);
+    return err;
 }
 #endif
 
@@ -235,13 +243,15 @@ static int kscan_matrix_read(const struct device *dev) {
     for (int i = 0; i < config->outputs.len; i++) {
         const struct kscan_gpio *out_gpio = &config->outputs.gpios[i];
 
-        int err = gpio_pin_set_dt(&out_gpio->spec, 1);
+        // Set the output active. 把列拉成0, 595 
+        int err = gpio_pin_set_dt(&out_gpio->spec, 0);
         if (err) {
             LOG_ERR("Failed to set output %i active: %i", out_gpio->index, err);
             return err;
         }
 
 #if CONFIG_ZMK_KSCAN_MATRIX_WAIT_BEFORE_INPUTS > 0
+ddd
         k_busy_wait(CONFIG_ZMK_KSCAN_MATRIX_WAIT_BEFORE_INPUTS);
 #endif
         struct kscan_gpio_port_state state = {0};
@@ -249,8 +259,12 @@ static int kscan_matrix_read(const struct device *dev) {
         for (int j = 0; j < data->inputs.len; j++) {
             const struct kscan_gpio *in_gpio = &data->inputs.gpios[j];
 
-            const int index = state_index_io(config, in_gpio->index, out_gpio->index);
+            // const int index = state_index_io(config, in_gpio->index, out_gpio->index);
+            const int index = state_index_io(config, out_gpio->index, in_gpio->index);
             const int active = kscan_gpio_pin_get(in_gpio, &state);
+            // if(active > 0){
+            //     LOG_INF("active %d index %d in_gpio->index %d, out_gpio->index %d", active,index,in_gpio->index, out_gpio->index);
+            // }
             if (active < 0) {
                 LOG_ERR("Failed to read port %s: %i", in_gpio->spec.port->name, active);
                 return active;
@@ -259,8 +273,8 @@ static int kscan_matrix_read(const struct device *dev) {
             zmk_debounce_update(&data->matrix_state[index], active, config->debounce_scan_period_ms,
                                 &config->debounce_config);
         }
-
-        err = gpio_pin_set_dt(&out_gpio->spec, 0);
+        //set output inactive ,把列拉回1正常状态
+        err = gpio_pin_set_dt(&out_gpio->spec, 1);
         if (err) {
             LOG_ERR("Failed to set output %i inactive: %i", out_gpio->index, err);
             return err;
@@ -276,8 +290,14 @@ static int kscan_matrix_read(const struct device *dev) {
     static int qf_cnt = 0;
     qf_cnt++;
 //  extern enum zmk_transport zmk_endpoint_get_preferred_transport(void) ;
-    if (qf_cnt % 5000 == 0  ) {
+    if (qf_cnt % 1000 == 0  ) {
         LOG_INF("Curr22 Sec -> %d", qf_cnt / 1000);
+        #undef OUT
+        uint32_t reg_out = NRF_P0->OUT;
+
+        bool p03 = (reg_out >> 3) & 1;
+        LOG_INF("rgb status P0.03 = %d", p03);
+
         #ifdef CONFIG_ZMK_BLE
         extern  int zmk_ble_active_profile_index(void);
         LOG_INF("profile=%d transport BLE2 USB1 -> %d\n", zmk_ble_active_profile_index(),zmk_endpoint_get_preferred_transport());
@@ -305,8 +325,9 @@ static int kscan_matrix_read(const struct device *dev) {
                     }
                 }
                 
-                LOG_DBG("Sending event at %i,%i state %s", r, c, pressed ? "on" : "off");
+               LOG_DBG("Sending event at %i,%i state %s", r, c, pressed ? "on" : "off");
                 data->callback(dev, r, c, pressed);
+           
             }
 
             continue_scan = continue_scan || zmk_debounce_is_active(state);
@@ -401,7 +422,7 @@ static int kscan_matrix_init_inputs(const struct device *dev) {
 
     for (int i = 0; i < data->inputs.len; i++) {
         const struct kscan_gpio *gpio = &data->inputs.gpios[i];
-        LOG_INF("1111 Init input %d gpio->spec.pin %d", i,gpio->spec.pin);
+        LOG_INF("1234 Init input %d gpio->spec.pin %d", i,gpio->spec.pin);
         int err = kscan_matrix_init_input_inst(dev, gpio);
         if (err) {
             // return err;
@@ -549,7 +570,7 @@ static const struct kscan_driver_api kscan_matrix_api = {
                                                                                                    \
     static struct kscan_matrix_data kscan_matrix_data_##n = {                                      \
         .inputs =                                                                                  \
-            KSCAN_GPIO_LIST(COND_DIODE_DIR(n, (kscan_matrix_cols_##n), (kscan_matrix_rows_##n))),  \
+            KSCAN_GPIO_LIST(kscan_matrix_rows_##n),                                               \
         .matrix_state = kscan_matrix_state_##n,                                                    \
         COND_INTERRUPTS((.irqs = kscan_matrix_irqs_##n, ))};                                       \
                                                                                                    \
@@ -557,7 +578,7 @@ static const struct kscan_driver_api kscan_matrix_api = {
         .rows = ARRAY_SIZE(kscan_matrix_rows_##n),                                                 \
         .cols = ARRAY_SIZE(kscan_matrix_cols_##n),                                                 \
         .outputs =                                                                                 \
-            KSCAN_GPIO_LIST(COND_DIODE_DIR(n, (kscan_matrix_rows_##n), (kscan_matrix_cols_##n))),  \
+            KSCAN_GPIO_LIST(kscan_matrix_cols_##n),                                                \
         .debounce_config =                                                                         \
             {                                                                                      \
                 .debounce_press_ms = INST_DEBOUNCE_PRESS_MS(n),                                    \

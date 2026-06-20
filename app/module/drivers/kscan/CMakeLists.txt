@@ -2,10 +2,19 @@
 # SPDX-License-Identifier: MIT
 
 zephyr_library_amend()
-message("111CONFIG_ZMK_KSCAN_GPIO_DIRECTs ${CONFIG_ZMK_KSCAN_GPIO_DIRECT}")
-message("22CONFIG_ZMK_KSCAN_GPIO_MATRIX ${CONFIG_ZMK_KSCAN_GPIO_MATRIX}")
 zephyr_library_sources_ifdef(CONFIG_ZMK_KSCAN_GPIO_DRIVER kscan_gpio.c)
-zephyr_library_sources_ifdef(CONFIG_ZMK_KSCAN_GPIO_MATRIX kscan_gpio_matrix_zmk.c)
+
+message("555555:==== ${CONFIG_ZMK_QF_595}")
+
+if(CONFIG_ZMK_QF_595)
+    message("44444456:==== using kscan_gpio_matrix_595.c")
+    zephyr_library_sources(kscan_gpio_matrix_595.c)
+else()
+    message("44444489:==== using kscan_gpio_matrix_zmk.c")
+    zephyr_library_sources(kscan_gpio_matrix.c)
+endif()
+
+
 zephyr_library_sources_ifdef(CONFIG_ZMK_KSCAN_GPIO_CHARLIEPLEX kscan_gpio_charlieplex.c)
 zephyr_library_sources_ifdef(CONFIG_ZMK_KSCAN_GPIO_DIRECT kscan_gpio_direct.c)
 zephyr_library_sources_ifdef(CONFIG_ZMK_KSCAN_GPIO_DEMUX kscan_gpio_demux.c)
