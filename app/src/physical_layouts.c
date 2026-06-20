@@ -144,9 +144,6 @@ static const struct zmk_physical_layout *const layouts[] = {
 
 #if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
 
-#warning                                                                                           \
-    "Ignoring the physical layouts and using the chosen matrix transform. Consider setting a chosen physical layout instead."
-
 #endif
 
 ZMK_MATRIX_TRANSFORM_EXTERN(DT_CHOSEN(zmk_matrix_transform));

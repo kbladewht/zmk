@@ -175,7 +175,7 @@ static int reg_595_pin_config(const struct device *dev, gpio_pin_t pin, gpio_fla
  LOG_INF("66666");
         return ss;
     }
- LOG_INF("oo1111");
+//  LOG_INF("oo1111");
     return ret;
 }
 
