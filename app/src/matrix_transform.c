@@ -84,7 +84,7 @@ int32_t zmk_matrix_transform_row_column_to_position(zmk_matrix_transform_t mt, u
      LOG_INF("22MT: after offset row=%d, col=%d", row, column);
     if (!mt->lookup_table) {
         return (row * mt->columns) + column;
-    }//////
+    }
 
     uint16_t lookup_index = ((row * mt->columns) + column);
     if (lookup_index >= mt->len) {
