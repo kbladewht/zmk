@@ -6,9 +6,9 @@ set(ZEPHYR_BOARD_ALIASES "boards/aliases.cmake")
 set(ZEPHYR_EXTRA_MODULES "${ZMK_EXTRA_MODULES};${CMAKE_CURRENT_SOURCE_DIR}/module;${CMAKE_CURRENT_SOURCE_DIR}/keymap-module")
 message(STATUS "111111: ${CMAKE_CURRENT_SOURCE_DIR}")
 list(APPEND ZEPHYR_EXTRA_MODULES
-  "D:/project/GitHub/zmkesb/zmk-feature-split-esb"
-  ${CMAKE_CURRENT_SOURCE_DIR}/../nrf
-  ${CMAKE_CURRENT_SOURCE_DIR}/../nrfxlib
+  "D:/project/GitHub/zmkesb/zmk-feature-split-esb-damex"
+  # ${CMAKE_CURRENT_SOURCE_DIR}/../nrf
+  # ${CMAKE_CURRENT_SOURCE_DIR}/../nrfxlib
 )
 
 

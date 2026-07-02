@@ -31,8 +31,9 @@ static void raise_led_changed_event(struct k_work *_work) {
     const zmk_hid_indicators_t indicators = zmk_hid_indicators_get_current_profile();
 
     raise_zmk_hid_indicators_changed((struct zmk_hid_indicators_changed){.indicators = indicators});
-
+    LOG_INF("11111 Update HID indicators: %x", indicators);
 #if IS_ENABLED(CONFIG_ZMK_SPLIT_PERIPHERAL_HID_INDICATORS) && IS_ENABLED(CONFIG_ZMK_SPLIT)
+    LOG_INF("22222 Update HID indicators: %x", indicators);
     zmk_split_central_update_hid_indicator(indicators);
 #endif
 }
