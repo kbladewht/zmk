@@ -21,5 +21,10 @@ cd app
 #   -DZMK_EXTRA_MODULES="D:/project/GitHub/zmk_0917_offical/prospector-zmk-module"
 
 west build -p always -b xiao_ble//zmk -- \
-  -DSHIELD="corne_dongle " \
+  -DSHIELD="corne_dongle prospector_adapter" \
   -DZMK_EXTRA_MODULES="D:/project/GitHub/zmk_0917_offical/prospector-zmk-module"
+
+  cp "build/zephyr/zmk.uf2" "/c/Users/dellht/Downloads/receiver_oled_$(date +%H%M%S).uf2"
+
+echo "Copy the uf2 file to /c/Users/dellht/Downloads/receiver_oled_$(date +%H%M%S).uf2"
+
