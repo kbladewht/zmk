@@ -16,6 +16,10 @@ rm -rf app/build
 
 cd app
 
+# west build -p always -b xiao_ble//zmk -- \
+#   -DSHIELD="corne_dongle prospector_adapter" \
+#   -DZMK_EXTRA_MODULES="D:/project/GitHub/zmk_0917_offical/prospector-zmk-module"
+
 west build -p always -b xiao_ble//zmk -- \
-  -DSHIELD="corne_dongle prospector_adapter" \
+  -DSHIELD="corne_dongle " \
   -DZMK_EXTRA_MODULES="D:/project/GitHub/zmk_0917_offical/prospector-zmk-module"
