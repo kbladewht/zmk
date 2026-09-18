@@ -19,7 +19,7 @@ config I2C
     default y
 
 config SSD1306
-    default y
+    default n
 
 endif # ZMK_DISPLAY
 
