@@ -26,19 +26,12 @@ cd app || exit 1
 pwd
 echo "Building for: $SHIELD_TARGET "
 
-
-  # BIG=""
  
-if ! west build -b kblade//zmk \
+west build -b kblade//zmk \
   -S zmk-usb-logging \
    -- -DSHIELD="prospector_ms2 corne_dongle" -DCONFIG_ZMK_BLE=y \
   -DKEYBOARD=pilot/npad -DKEYMAP=corne_dongle \
   -DCONFIG_PROSPECTOR_DISPLAY_LOG_PAGE=y \
   -DCONFIG_USB_DEVICE_PRODUCT=\"DongleProspector\" \
   -DCONFIG_LOG_DEFAULT_LEVEL=2 \
-  $BIG \
-  -DZMK_EXTRA_MODULES="$ORIG_CWD/prospector-zmk-module"; then
-  echo "West build failed; skipping UF2 copy and device polling." >&2
-  exit 1
-fi
-  
+  -DZMK_EXTRA_MODULES="$ORIG_CWD/prospector-zmk-module"
