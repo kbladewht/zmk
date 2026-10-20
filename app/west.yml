@@ -45,9 +45,9 @@ manifest:
       path: modules/msgs/zmk-studio-messages
       remote: zmkfirmware
     - name: prospector-zmk-module
-      remote: prospector
+      remote: kbladewht
       revision: master
-      path: modules/prospector-zmk-module
+      path: prospector-zmk-module
   group-filter: [+optional]
   self:
     west-commands: scripts/west-commands.yml
