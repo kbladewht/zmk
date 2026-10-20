@@ -44,9 +44,10 @@ manifest:
       revision: 6cb4c283e76209d59c45fbcb218800cd19e9339d
       path: modules/msgs/zmk-studio-messages
       remote: zmkfirmware
-    - name: prospector-zmk-module # <--- and these
-      remote: kbladewht # <---
-      revision: feat/new-status-screens # <---
+    - name: prospector-zmk-module
+      remote: prospector
+      revision: master
+      path: modules/prospector-zmk-module
   group-filter: [+optional]
   self:
     west-commands: scripts/west-commands.yml
