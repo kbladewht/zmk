@@ -26,8 +26,7 @@ echo "Building for: $SHIELD_TARGET "
   # -S zmk-usb-logging \
   #-DCONFIG_ZMK_BLE=n 进制蓝牙方便开发速度
 west build -b nice_nano_k \
-   -- -DSHIELD=corne_left -DCONFIG_ZMK_BLE=y \
-  -DKEYBOARD=pilot/npad -DKEYMAP=corne_v2
+   -- -DSHIELD=corne_left -DCONFIG_ZMK_BLE=y
   
 
 SRC_FILE="build/zephyr/zmk.uf2"
