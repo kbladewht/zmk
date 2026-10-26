@@ -30,7 +30,6 @@ echo "Building for: $SHIELD_TARGET "
 west build -b kblade//zmk \
   -S zmk-usb-logging \
    -- -DSHIELD="prospector_ms2 corne_dongle" -DCONFIG_ZMK_BLE=y \
-  -DKEYBOARD=pilot/npad -DKEYMAP=corne_dongle \
   -DCONFIG_PROSPECTOR_DISPLAY_LOG_PAGE=y \
   -DCONFIG_USB_DEVICE_PRODUCT=\"DongleProspector\" \
   -DCONFIG_LOG_DEFAULT_LEVEL=2 \
