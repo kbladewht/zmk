@@ -33,7 +33,7 @@ west build -b kblade//zmk \
    -- -DSHIELD="prospector_ms18 corne_dongle" -DCONFIG_ZMK_BLE=y \
   -DCONFIG_USB_DEVICE_PRODUCT=\"DongleProspector\" \
   -DCONFIG_LOG_DEFAULT_LEVEL=2 \
-  -DZMK_EXTRA_MODULES="$ORIG_CWD/prospector-zmk-module"
+  -DZMK_EXTRA_MODULES="$ORIG_CWD/prospector-zmk-module" || exit $?
 
 
 SRC_FILE="build/zephyr/zmk.uf2"
